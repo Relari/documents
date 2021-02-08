@@ -1,13 +1,14 @@
 package com.renzo.document.business.service;
 
-import com.renzo.document.business.model.dto.DocumentDto;
+import com.renzo.document.business.model.domain.Document;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface DocumentService {
 
-  Flux<DocumentDto> documents();
+  Flux<Document> documents();
 
-  Mono<Void> insert(DocumentDto documentDto);
+  Mono<Void> insert(Document document);
 
+  Mono<Document> findById(Integer id);
 }

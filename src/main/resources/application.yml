@@ -1,0 +1,28 @@
+application:
+  api:
+    path: '/business/v1/documents'
+  error:
+    message:
+      find-document: 'Error searching for a document.'
+      save-document: 'Failed to save a document.'
+
+logging:
+  file: document.log
+  level:
+    com:
+      renzo:
+        document: TRACE
+
+server:
+  port: 8106
+
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:document.db
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: com.renzo.document.config.SQLite.SQLiteDialect
