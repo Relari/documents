@@ -1,6 +1,6 @@
 application:
   api:
-    path: '/business/v1/documents'
+    path: '/business/sqlite/v1/documents'
   error:
     message:
       find-document: 'Error searching for a document.'
@@ -9,9 +9,7 @@ application:
 logging:
   file: document.log
   level:
-    com:
-      renzo:
-        document: TRACE
+    com.pe.relari.documentsqlite: TRACE
 
 server:
   port: 8106
@@ -25,4 +23,4 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: com.renzo.document.config.SQLite.SQLiteDialect
+        dialect: com.pe.relari.documentsqlite.config.SQLite.SQLiteDialect
