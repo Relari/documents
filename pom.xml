@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.pe.relari</groupId>
-	<artifactId>document-sqlite</artifactId>
+	<artifactId>documents</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>document-sqlite</name>
 	<description>Demo project for Spring Boot</description>

@@ -1,15 +1,22 @@
 application:
   api:
     path: '/business/sqlite/v1/documents'
-  error:
-    message:
-      find-document: 'Error searching for a document.'
-      save-document: 'Failed to save a document.'
+  backend:
+    errors:
+      EMPLOYEE_NOT_SAVE:
+        description: 'ErrorModel al guardar al empleado.'
+        category: INTERNAL_ERROR
+      EMPLOYEE_NOT_FOUND:
+        description: 'Empleado no encontrado.'
+        category: NOT_FOUND
+      EMPLOYEE_NOT_UPDATE:
+        description: 'ErrorModel al actualizar al empleado.'
+        category: INTERNAL_ERROR
 
 logging:
   file: document.log
   level:
-    com.pe.relari.documentsqlite: TRACE
+    com.pe.relari.documents: TRACE
 
 server:
   port: 8106
@@ -23,4 +30,4 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: com.pe.relari.documentsqlite.config.SQLite.SQLiteDialect
+        dialect: com.pe.relari.config.database.SqLiteDialect
