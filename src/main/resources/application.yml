@@ -1,4 +1,9 @@
 application:
+  info:
+    name: '@project.name@'
+    description: '@project.description@'
+    version: '@project.version@'
+
   api:
     path: '/business/sqlite/v1/documents'
   backend:
@@ -30,4 +35,4 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: com.pe.relari.config.database.SqLiteDialect
+        dialect: com.pe.relari.business.sqlite.config.database.SqLiteDialect
