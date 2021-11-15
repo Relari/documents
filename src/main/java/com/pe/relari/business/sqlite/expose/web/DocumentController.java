@@ -4,8 +4,12 @@ import com.pe.relari.business.sqlite.documents.model.api.DocumentRequest;
 import com.pe.relari.business.sqlite.documents.model.api.DocumentResponse;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.service.DocumentService;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,11 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "${application.api.path}")
@@ -27,22 +26,30 @@ class DocumentController {
   private final DocumentService documentService;
 
   @GetMapping
-  public Flux<DocumentResponse> listOfDocument() {
+  public List<DocumentResponse> listOfDocument() {
     return documentService.documents()
-            .map(this::mapDocumentResponse);
+            .stream()
+            .map(this::mapDocumentResponse)
+            .collect(Collectors.toList());
   }
 
   @GetMapping(path = "/{id}")
-  public Mono<DocumentResponse> findById(@PathVariable("id") Integer id) {
-    return documentService.findById(id)
-            .map(this::mapDocumentResponse);
+  public DocumentResponse findById(@PathVariable("id") Integer id) {
+    Document document = documentService.findById(id);
+    return mapDocumentResponse(document);
+  }
+
+  @DeleteMapping(path = "/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteById(@PathVariable("id") Integer id) {
+    documentService.deleteById(id);
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<Void> insertDocument(@RequestBody @Valid DocumentRequest documentRequest) {
-    return Mono.fromCallable(() -> mapDocument(documentRequest))
-            .flatMap(documentService::insert);
+  public void insertDocument(@RequestBody @Valid DocumentRequest documentRequest) {
+    Document document = mapDocument(documentRequest);
+    documentService.insert(document);
   }
 
   private Document mapDocument(DocumentRequest documentRequest) {

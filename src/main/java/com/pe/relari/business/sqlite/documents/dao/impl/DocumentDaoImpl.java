@@ -9,9 +9,10 @@ import com.pe.relari.business.sqlite.documents.model.entity.DocumentEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -23,23 +24,17 @@ class DocumentDaoImpl implements DocumentDao {
   private final ErrorFactory errorFactory;
 
   @Override
-  public Flux<Document> findAll() {
-    return Flux.fromIterable(documentRepository.findAll())
+  public List<Document> findAll() {
+    return documentRepository.findAll()
+        .stream()
         .map(this::mapDocument)
-        .doOnSubscribe(subscription -> log.debug("Listing the documents."))
-        .doOnNext(document -> log.trace(document.toString()))
-        .doOnComplete(() -> log.info("Obtained documents."));
+        .collect(Collectors.toList());
   }
 
   @Override
-  public Mono<Void> create(Document document) {
-    return Mono.fromCallable(() -> mapDocumentEntity(document))
-        .map(documentRepository::save)
-        .subscribeOn(Schedulers.immediate())
-        .doOnSubscribe(subscription -> log.debug("Creating document."))
-        .doOnNext(documentEntity -> log.trace(documentEntity.toString()))
-        .doOnSuccess(documentEntity -> log.info("Complete creation."))
-        .then();
+  public void create(Document document) {
+    Optional.of(mapDocumentEntity(document))
+        .map(documentRepository::save);
   }
 
   private DocumentEntity mapDocumentEntity(Document document) {
@@ -54,19 +49,17 @@ class DocumentDaoImpl implements DocumentDao {
   }
 
   @Override
-  public Mono<Document> findById(Integer id) {
-    return Mono.fromCallable(() -> findBy(id))
+  public Document findById(Integer id) {
+    return documentRepository.findById(id)
         .map(this::mapDocument)
-        .doOnError(throwable -> log.error("ErrorModel searching for a document.", throwable))
-        .doOnSubscribe(subscription -> log.debug("Searching for the document by id."))
-        .doOnSuccess(documentEntity -> log.info("The searched id was found."));
+        .orElseThrow(() -> errorFactory.buildException(
+            ErrorCategory.EMPLOYEE_NOT_FOUND, null)
+    );
   }
 
-  private DocumentEntity findBy(Integer id) {
-    return documentRepository.findById(id)
-        .orElseThrow(() -> errorFactory.buildException(
-                ErrorCategory.EMPLOYEE_NOT_FOUND, null)
-        );
+  @Override
+  public void deleteById(Integer id) {
+    documentRepository.deleteById(id);
   }
 
   private Document mapDocument(DocumentEntity documentEntity) {

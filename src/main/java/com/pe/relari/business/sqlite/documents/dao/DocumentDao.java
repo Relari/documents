@@ -2,14 +2,15 @@ package com.pe.relari.business.sqlite.documents.dao;
 
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import java.util.List;
 
 public interface DocumentDao {
 
-  Flux<Document> findAll();
+  List<Document> findAll();
 
-  Mono<Void> create(Document document);
+  void create(Document document);
 
-  Mono<Document> findById(Integer id);
+  Document findById(Integer id);
+
+  void deleteById(Integer id);
 }

@@ -3,15 +3,16 @@ package com.pe.relari.business.sqlite.expose.web;
 import com.pe.relari.business.sqlite.documents.model.api.DocumentResponse;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.service.DocumentService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+
+import java.util.Collections;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class DocumentControllerTest {
@@ -23,23 +24,31 @@ class DocumentControllerTest {
   private DocumentController controller;
 
   @Test
-  void test() {
+  void whenGetAllDocumentsThenReturnDocuments() {
 
     Mockito.when(service.documents())
-            .thenReturn(Flux.just(document()));
+            .thenReturn(Collections.singletonList(document()));
 
-    StepVerifier.create(controller.listOfDocument())
-            .expectNext(documentResponse());
+    List<DocumentResponse> documentResponses = controller.listOfDocument();
+
+    Assertions.assertNotNull(documentResponses);
   }
 
   @Test
-  void test1() {
+  void whenSaveDocumentThenReturnSuccessful() {
+
+    Document document = document();
 
     Mockito.when(service.findById(Mockito.anyInt()))
-            .thenReturn(Mono.just(document()));
+            .thenReturn(document);
 
-    StepVerifier.create(controller.findById(1))
-            .expectNext(documentResponse());
+    DocumentResponse documentResponse = controller.findById(1);
+
+    Assertions.assertEquals(document.getAuthor(), documentResponse.getAuthor());
+    Assertions.assertEquals(document.getDescription(), documentResponse.getDescription());
+    Assertions.assertEquals(document.getGender(), documentResponse.getGender());
+    Assertions.assertEquals(document.getNumberPages(), documentResponse.getNumberPages());
+    Assertions.assertEquals(document.getYearPublication(), documentResponse.getYearPublication());
   }
 
   private Document document() {
