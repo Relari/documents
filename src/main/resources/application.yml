@@ -21,10 +21,12 @@ application:
 logging:
   file: document.log
   level:
-    com.pe.relari.documents: TRACE
+    com.pe.relari.business.sqlite: TRACE
 
 server:
   port: 8106
+  error:
+    include-message: always
 
 spring:
   datasource:

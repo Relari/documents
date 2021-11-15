@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,6 +24,7 @@ class DocumentDaoImpl implements DocumentDao {
 
   @Override
   public List<Document> findAll() {
+    log.debug("Listando los documentos.");
     return documentRepository.findAll()
         .stream()
         .map(this::mapDocument)
@@ -33,8 +33,9 @@ class DocumentDaoImpl implements DocumentDao {
 
   @Override
   public void create(Document document) {
-    Optional.of(mapDocumentEntity(document))
-        .map(documentRepository::save);
+    log.debug("Registrando el nuevo documento.");
+    DocumentEntity documentEntity = mapDocumentEntity(document);
+    documentRepository.save(documentEntity);
   }
 
   private DocumentEntity mapDocumentEntity(Document document) {
@@ -50,6 +51,7 @@ class DocumentDaoImpl implements DocumentDao {
 
   @Override
   public Document findById(Integer id) {
+    log.debug("Buscando el documento por el id {}", id);
     return documentRepository.findById(id)
         .map(this::mapDocument)
         .orElseThrow(() -> errorFactory.buildException(
@@ -59,6 +61,7 @@ class DocumentDaoImpl implements DocumentDao {
 
   @Override
   public void deleteById(Integer id) {
+    log.debug("Eliminando el documento por el id {}", id);
     documentRepository.deleteById(id);
   }
 
