@@ -1,8 +1,13 @@
 package com.pe.relari.business.sqlite.expose.web;
 
+import com.pe.relari.business.sqlite.documents.model.api.CodeResponse;
+import com.pe.relari.business.sqlite.documents.model.api.DocumentRequest;
+import com.pe.relari.business.sqlite.documents.util.DocumentUtil;
+import com.pe.relari.business.sqlite.documents.util.TestUtil;
 import com.pe.relari.business.sqlite.documents.model.api.DocumentResponse;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.service.DocumentService;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,9 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class DocumentControllerTest {
@@ -26,23 +28,24 @@ class DocumentControllerTest {
   @Test
   void whenGetAllDocumentsThenReturnDocuments() {
 
-    Mockito.when(service.documents())
-            .thenReturn(Collections.singletonList(document()));
+    Mockito.when(service.findAll())
+            .thenReturn(TestUtil.buildDocuments());
 
-    List<DocumentResponse> documentResponses = controller.listOfDocument();
+    List<DocumentResponse> documentResponses = controller.findAll();
 
+    Assertions.assertEquals(1, documentResponses.size());
     Assertions.assertNotNull(documentResponses);
   }
 
   @Test
-  void whenSaveDocumentThenReturnSuccessful() {
+  void whenFindDocumentByIdThenReturnDocument() {
 
-    Document document = document();
+    Document document = TestUtil.buildDocument();
 
     Mockito.when(service.findById(Mockito.anyInt()))
             .thenReturn(document);
 
-    DocumentResponse documentResponse = controller.findById(1);
+    DocumentResponse documentResponse = controller.findById(document.getId());
 
     Assertions.assertEquals(document.getAuthor(), documentResponse.getAuthor());
     Assertions.assertEquals(document.getDescription(), documentResponse.getDescription());
@@ -51,18 +54,22 @@ class DocumentControllerTest {
     Assertions.assertEquals(document.getYearPublication(), documentResponse.getYearPublication());
   }
 
-  private Document document() {
-    return Document.builder()
-            .author("author")
-            .description("description")
-            .gender("gender")
-            .numberPages(1)
-            .yearPublication(2020)
-            .build();
+  @Test
+  void whenSaveDocumentThenReturnSuccessful() {
+
+    Document document = TestUtil.buildDocument();
+    String documentId = DocumentUtil.buildDocumentId(document.getId());
+
+    Mockito.when(service.create(Mockito.any()))
+            .thenReturn(documentId);
+
+    CodeResponse codeResponse = controller.create(buildDocumentRequest());
+
+    Assertions.assertEquals(documentId, codeResponse.getDocumentCode());
   }
 
-  private DocumentResponse documentResponse() {
-    return DocumentResponse.builder()
+  private DocumentRequest buildDocumentRequest() {
+    return DocumentRequest.builder()
             .author("author")
             .description("description")
             .gender("gender")
