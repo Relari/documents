@@ -6,12 +6,11 @@ import com.pe.relari.business.sqlite.documents.exception.ErrorCategory;
 import com.pe.relari.business.sqlite.documents.exception.ErrorFactory;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.model.entity.DocumentEntity;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -32,10 +31,10 @@ class DocumentDaoImpl implements DocumentDao {
   }
 
   @Override
-  public void create(Document document) {
+  public Integer create(Document document) {
     log.debug("Registrando el nuevo documento.");
     DocumentEntity documentEntity = mapDocumentEntity(document);
-    documentRepository.save(documentEntity);
+    return documentRepository.save(documentEntity).getId();
   }
 
   private DocumentEntity mapDocumentEntity(Document document) {

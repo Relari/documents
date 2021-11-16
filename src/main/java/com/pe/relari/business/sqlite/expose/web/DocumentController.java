@@ -1,5 +1,6 @@
 package com.pe.relari.business.sqlite.expose.web;
 
+import com.pe.relari.business.sqlite.documents.model.api.CodeResponse;
 import com.pe.relari.business.sqlite.documents.model.api.DocumentRequest;
 import com.pe.relari.business.sqlite.documents.model.api.DocumentResponse;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
@@ -26,8 +27,8 @@ class DocumentController {
   private final DocumentService documentService;
 
   @GetMapping
-  public List<DocumentResponse> listOfDocument() {
-    return documentService.documents()
+  public List<DocumentResponse> findAll() {
+    return documentService.findAll()
             .stream()
             .map(this::mapDocumentResponse)
             .collect(Collectors.toList());
@@ -47,9 +48,10 @@ class DocumentController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public void insertDocument(@RequestBody @Valid DocumentRequest documentRequest) {
+  public CodeResponse create(@RequestBody @Valid DocumentRequest documentRequest) {
     Document document = mapDocument(documentRequest);
-    documentService.insert(document);
+    String documentId = documentService.create(document);
+    return CodeResponse.of(documentId);
   }
 
   private Document mapDocument(DocumentRequest documentRequest) {
@@ -69,7 +71,7 @@ class DocumentController {
             .gender(document.getGender())
             .numberPages(document.getNumberPages())
             .yearPublication(document.getYearPublication())
-            .id(document.getId())
+            .code(document.getDocumentCode())
             .build();
   }
 }

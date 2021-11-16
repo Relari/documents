@@ -8,7 +8,7 @@ public interface DocumentDao {
 
   List<Document> findAll();
 
-  void create(Document document);
+  Integer create(Document document);
 
   Document findById(Integer id);
 

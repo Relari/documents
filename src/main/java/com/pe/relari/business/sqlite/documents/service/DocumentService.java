@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface DocumentService {
 
-  List<Document> documents();
+  List<Document> findAll();
 
-  void insert(Document document);
+  String create(Document document);
 
   Document findById(Integer id);
 

@@ -3,9 +3,9 @@ package com.pe.relari.business.sqlite.documents.service.impl;
 import com.pe.relari.business.sqlite.documents.dao.DocumentDao;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.service.DocumentService;
+import com.pe.relari.business.sqlite.documents.util.DocumentUtil;
 import java.util.List;
 import java.util.Objects;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,13 +18,14 @@ class DocumentServiceImpl implements DocumentService {
   private final DocumentDao documentDao;
 
   @Override
-  public List<Document> documents() {
+  public List<Document> findAll() {
     return documentDao.findAll();
   }
 
   @Override
-  public void insert(Document document) {
-    documentDao.create(document);
+  public String create(Document document) {
+    Integer id = documentDao.create(document);
+    return DocumentUtil.buildDocumentId(id);
   }
 
   @Override

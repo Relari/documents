@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DocumentResponse {
 
-  private Integer id;
+  private String code;
 
   private String author;
 

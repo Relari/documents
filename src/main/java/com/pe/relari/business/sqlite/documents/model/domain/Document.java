@@ -1,5 +1,6 @@
 package com.pe.relari.business.sqlite.documents.model.domain;
 
+import com.pe.relari.business.sqlite.documents.util.DocumentUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,8 @@ public class Document {
   private String gender;
   private Integer yearPublication;
   private Integer numberPages;
+
+  public String getDocumentCode() {
+    return DocumentUtil.buildDocumentId(id);
+  }
 }
