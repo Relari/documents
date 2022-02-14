@@ -1,0 +1,151 @@
+openapi: 3.0.1
+info:
+  title: Documents API
+  description: Documents project for Spring Boot
+  version: 1.0.0
+servers:
+  - url: /business/sqlite/v1
+tags:
+  - name: Documents
+    description: Documents Controller
+paths:
+  /documents:
+    get:
+      tags:
+        - Documents
+      summary: Obtiene información general de los empleados.
+      description: Lista todos los empleados registrados.
+      operationId: findAllDocumentsUsingGET
+      responses:
+        "200":
+          description: Show Students
+          content:
+            application/stream+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentResponse'
+    post:
+      tags:
+        - Documents
+      summary: Guarda al empleado.
+      description: Guarda al empleado.
+      operationId: saveDocumentUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentRequest'
+        required: true
+      responses:
+        "201":
+          description: Show Students
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeResponse'
+  /documents/{id}:
+    get:
+      tags:
+        - Documents
+      summary: Obtiene información general de un empleado.
+      description: Busca al empleado por su Id.
+      operationId: findDocumentByIdUsingGET
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        "200":
+          description: Show Students
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+    delete:
+      tags:
+        - Documents
+      summary: Elimina al empleado.
+      description: Elimina al empleado por su Id.
+      operationId: deleteDocumentByIdUsingDELETE
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        "204":
+          description: Show Students
+          content:
+            text/plain: {}
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      description: Identificador del empleado.
+      required: true
+      schema:
+        type: integer
+  schemas:
+    DocumentRequest:
+      required:
+        - author
+        - description
+        - gender
+        - yearPublication
+        - numberPages
+      type: object
+      properties:
+        author:
+          type: string
+          description: Nombre del Empleado.
+          example: Renzo
+        description:
+          type: string
+          description: Cargo del Empleado.
+          example: Developer
+        gender:
+          pattern: "[M|F]"
+          type: string
+          description: Sexo del Empleado
+          example: M
+        yearPublication:
+          pattern: "[0-9]{4}"
+          type: integer
+          description: Sueldo del Empleado
+          example: 2020
+        numberPages:
+          pattern: "[0-9]*"
+          type: integer
+          description: Sueldo del Empleado
+          example: 100
+    CodeResponse:
+      type: object
+      properties:
+        documentCode:
+          type: string
+          description: Identificador del empleado
+          example: 67628dbe-5d10-4063-869a-9b1369054e85
+    DocumentResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Identificador del Emeplado.
+          example: 74d460d9-a5ba-4a4f-9a00-ab9ffe04a1b6
+        author:
+          type: string
+          description: Nombre del Empleado.
+          example: Renzo
+        description:
+          type: string
+          description: Cargo del Empleado.
+          example: Developer
+        gender:
+          type: string
+          description: Sexo del Empleado.
+          example: M
+        yearPublication:
+          type: integer
+          description: Sueldo del Empleado
+          example: 2020
+        numberPages:
+          type: integer
+          description: Sueldo del Empleado
+          example: 100
