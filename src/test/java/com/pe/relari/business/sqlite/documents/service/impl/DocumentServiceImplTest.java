@@ -1,5 +1,9 @@
 package com.pe.relari.business.sqlite.documents.service.impl;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.when;
+
 import com.pe.relari.business.sqlite.documents.dao.DocumentDao;
 import com.pe.relari.business.sqlite.documents.util.DocumentUtil;
 import com.pe.relari.business.sqlite.documents.util.TestUtil;
@@ -10,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,7 +28,7 @@ class DocumentServiceImplTest {
   @Test
   void whenGetAllDocumentsThenReturnDocuments() {
 
-    Mockito.when(documentDao.findAll())
+    when(documentDao.findAll())
             .thenReturn(TestUtil.buildDocuments());
 
     List<Document> documents = documentService.findAll();
@@ -40,7 +43,7 @@ class DocumentServiceImplTest {
 
     Document document = TestUtil.buildDocument();
 
-    Mockito.when(documentDao.findById(Mockito.anyInt()))
+    when(documentDao.findById(anyInt()))
             .thenReturn(document);
 
     Document documentModel = documentService.findById(1);
@@ -64,6 +67,34 @@ class DocumentServiceImplTest {
 
     Assertions.assertEquals(DocumentUtil.buildDocumentId(id), documentCode);
 
+  }
+
+  @Test
+  void whenDeleteDocumentByIdThenReturnSuccessful() {
+
+    Document document = TestUtil.buildDocument();
+
+    when(documentDao.findById(anyInt()))
+            .thenReturn(document);
+
+    documentDao.deleteById(anyInt());
+
+    Integer documentId = 1;
+    documentService.deleteById(documentId);
+
+    Assertions.assertNotNull(documentId);
+  }
+
+  @Test
+  void whenDeleteDocumentByIdThenReturnNotFound() {
+
+    when(documentDao.findById(anyInt()))
+            .thenReturn(null);
+
+    Integer documentId = 1;
+    documentService.deleteById(documentId);
+
+    Assertions.assertNotNull(documentId);
   }
 
 }

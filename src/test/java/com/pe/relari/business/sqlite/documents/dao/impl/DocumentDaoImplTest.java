@@ -1,5 +1,9 @@
 package com.pe.relari.business.sqlite.documents.dao.impl;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.when;
+
 import com.pe.relari.business.sqlite.documents.dao.repository.DocumentRepository;
 import com.pe.relari.business.sqlite.documents.exception.ErrorFactory;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
@@ -12,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
@@ -34,7 +37,7 @@ class DocumentDaoImplTest {
 
     List<DocumentEntity> documentEntities = TestUtil.buildDocumentEntities();
 
-    Mockito.when(documentRepository.findAll())
+    when(documentRepository.findAll())
             .thenReturn(documentEntities);
 
     List<Document> documents = documentDao.findAll();
@@ -47,7 +50,7 @@ class DocumentDaoImplTest {
 
     DocumentEntity documentEntity = TestUtil.buildDocumentEntity();
 
-    Mockito.when(documentRepository.findById(Mockito.anyInt()))
+    when(documentRepository.findById(anyInt()))
             .thenReturn(Optional.of(documentEntity));
 
     Document document = documentDao.findById(documentEntity.getId());
@@ -63,10 +66,10 @@ class DocumentDaoImplTest {
   @Test
   void whenSearchDocumentByIdThenReturnError() {
 
-    Mockito.when(documentRepository.findById(Mockito.anyInt()))
+    when(documentRepository.findById(anyInt()))
             .thenReturn(Optional.empty());
 
-    Mockito.when(errorFactory.buildException(Mockito.any(), Mockito.any()))
+    when(errorFactory.buildException(any(), any()))
             .thenReturn(new RuntimeException());
 
     Assertions.assertThrows(
@@ -80,7 +83,7 @@ class DocumentDaoImplTest {
 
     DocumentEntity documentEntity = TestUtil.buildDocumentEntity();
 
-    Mockito.when(documentRepository.save(Mockito.any()))
+    when(documentRepository.save(any()))
             .thenReturn(documentEntity);
 
     Integer id = documentDao.create(TestUtil.buildDocument());
@@ -89,4 +92,14 @@ class DocumentDaoImplTest {
 
   }
 
+  @Test
+  void whenDeleteDocumentByIdThenReturnError() {
+
+    documentRepository.deleteById(anyInt());
+
+    Integer documentId = 1;
+    documentDao.deleteById(documentId);
+
+    Assertions.assertNotNull(documentId);
+  }
 }
