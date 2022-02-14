@@ -5,53 +5,48 @@ import com.pe.relari.business.sqlite.documents.model.api.DocumentRequest;
 import com.pe.relari.business.sqlite.documents.model.api.DocumentResponse;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.service.DocumentService;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
-@RestController
-@RequestMapping(path = "${application.api.path}")
+@Component
 @AllArgsConstructor
-class DocumentController {
+class DocumentController implements DocumentsApiDelegate {
 
   private final DocumentService documentService;
 
-  @GetMapping
-  public List<DocumentResponse> findAll() {
-    return documentService.findAll()
+  @Override
+  public ResponseEntity<List<DocumentResponse>> findAllDocumentsUsingGET() {
+    List<DocumentResponse> documentResponses = documentService.findAll()
             .stream()
             .map(this::mapDocumentResponse)
             .collect(Collectors.toList());
+    return ResponseEntity.ok(documentResponses);
   }
 
-  @GetMapping(path = "/{id}")
-  public DocumentResponse findById(@PathVariable("id") Integer id) {
+  @Override
+  public ResponseEntity<DocumentResponse> findDocumentByIdUsingGET(Integer id) {
     Document document = documentService.findById(id);
-    return mapDocumentResponse(document);
+    DocumentResponse documentResponse = mapDocumentResponse(document);
+    return ResponseEntity.ok(documentResponse);
   }
 
-  @DeleteMapping(path = "/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteById(@PathVariable("id") Integer id) {
+  @Override
+  public ResponseEntity<Void> deleteDocumentByIdUsingDELETE(Integer id) {
     documentService.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public CodeResponse create(@RequestBody @Valid DocumentRequest documentRequest) {
+  @Override
+  public ResponseEntity<CodeResponse> saveDocumentUsingPOST(DocumentRequest documentRequest) {
     Document document = mapDocument(documentRequest);
-    String documentId = documentService.create(document);
-    return CodeResponse.of(documentId);
+    String code = documentService.create(document);
+
+    CodeResponse codeResponse = new CodeResponse();
+    codeResponse.documentCode(code);
+    return ResponseEntity.ok(codeResponse);
   }
 
   private Document mapDocument(DocumentRequest documentRequest) {
@@ -65,13 +60,13 @@ class DocumentController {
   }
 
   private DocumentResponse mapDocumentResponse(Document document) {
-    return DocumentResponse.builder()
-            .author(document.getAuthor())
-            .description(document.getDescription())
-            .gender(document.getGender())
-            .numberPages(document.getNumberPages())
-            .yearPublication(document.getYearPublication())
-            .code(document.getDocumentCode())
-            .build();
+    DocumentResponse documentResponse = new DocumentResponse();
+    documentResponse.setAuthor(document.getAuthor())           ;
+    documentResponse.setDescription(document.getDescription());
+    documentResponse.setGender(document.getGender());
+    documentResponse.setNumberPages(document.getNumberPages());
+    documentResponse.setYearPublication(document.getYearPublication());
+    documentResponse.setCode(document.getDocumentCode());
+    return documentResponse;
   }
 }
