@@ -18,6 +18,7 @@
 		<java.version>1.8</java.version>
 		<server.resource>documents</server.resource>
 		<openapi-generator-version>5.4.0</openapi-generator-version>
+		<mapstruct.version>1.4.2.Final</mapstruct.version>
 	</properties>
 
 	<dependencyManagement>
@@ -74,6 +75,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -100,7 +113,7 @@
 								${project.basedir}/src/main/resources/OpenApi.yaml
 							</inputSpec>
 							<generatorName>spring</generatorName>
-							<apiPackage>${project.groupId}.expose.web</apiPackage>
+							<apiPackage>${project.groupId}.expose.web.generate</apiPackage>
 							<modelPackage>${project.groupId}.${server.resource}.model.api</modelPackage>
 							<supportingFilesToGenerate>
 								ApiUtil.java
@@ -123,6 +136,8 @@
 						<exclude>com/pe/relari/business/sqlite/documents/model/**</exclude>
 						<exclude>com/pe/relari/business/sqlite/documents/util/**</exclude>
 						<exclude>com/pe/relari/business/sqlite/DocumentApplication.*</exclude>
+						<exclude>com/pe/relari/business/sqlite/expose/web/generate/**</exclude>
+						<exclude>com/pe/relari/business/sqlite/expose/web/mapper/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
