@@ -5,7 +5,7 @@ import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.when;
 
 import com.pe.relari.business.sqlite.documents.dao.repository.DocumentRepository;
-import com.pe.relari.business.sqlite.documents.exception.ErrorFactory;
+import com.pe.relari.business.sqlite.documents.exception.DocumentException;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.model.entity.DocumentEntity;
 import com.pe.relari.business.sqlite.documents.util.TestUtil;
@@ -25,9 +25,6 @@ class DocumentDaoImplTest {
 
   @Mock
   private DocumentRepository documentRepository;
-
-  @Mock
-  private ErrorFactory errorFactory;
 
   @InjectMocks
   private DocumentDaoImpl documentDao;
@@ -69,11 +66,8 @@ class DocumentDaoImplTest {
     when(documentRepository.findById(anyInt()))
             .thenReturn(Optional.empty());
 
-    when(errorFactory.buildException(any(), any()))
-            .thenReturn(new RuntimeException());
-
     Assertions.assertThrows(
-            RuntimeException.class, () -> documentDao.findById(1)
+            DocumentException.class, () -> documentDao.findById(1)
     );
 
   }

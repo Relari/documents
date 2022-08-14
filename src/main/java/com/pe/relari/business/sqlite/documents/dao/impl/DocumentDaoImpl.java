@@ -2,6 +2,7 @@ package com.pe.relari.business.sqlite.documents.dao.impl;
 
 import com.pe.relari.business.sqlite.documents.dao.DocumentDao;
 import com.pe.relari.business.sqlite.documents.dao.repository.DocumentRepository;
+import com.pe.relari.business.sqlite.documents.exception.DocumentException;
 import com.pe.relari.business.sqlite.documents.exception.ErrorCategory;
 import com.pe.relari.business.sqlite.documents.exception.ErrorFactory;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Component;
 class DocumentDaoImpl implements DocumentDao {
 
   private final DocumentRepository documentRepository;
-
-  private final ErrorFactory errorFactory;
 
   @Override
   public List<Document> findAll() {
@@ -53,8 +52,8 @@ class DocumentDaoImpl implements DocumentDao {
     log.debug("Buscando el documento por el id {}", id);
     return documentRepository.findById(id)
         .map(this::mapDocument)
-        .orElseThrow(() -> errorFactory.buildException(
-            ErrorCategory.EMPLOYEE_NOT_FOUND, null)
+        .orElseThrow(() ->
+                DocumentException.of(ErrorCategory.EMPLOYEE_NOT_FOUND)
     );
   }
 
