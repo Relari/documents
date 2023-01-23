@@ -13,6 +13,7 @@ public interface DocumentMapper {
   @Mapping(target = "id", ignore = true)
   Document mapDocument(DocumentRequest documentRequest);
 
+  @Mapping(source = "documentCode", target = "code")
   DocumentResponse mapDocumentResponse(Document document);
 
   @Mapping(target = "documentCode", source = "code")
