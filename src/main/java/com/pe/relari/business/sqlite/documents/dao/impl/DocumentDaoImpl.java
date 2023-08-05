@@ -33,7 +33,7 @@ class DocumentDaoImpl implements DocumentDao {
   public Integer create(Document document) {
     log.debug("Registrando el nuevo documento.");
     DocumentEntity documentEntity = mapDocumentEntity(document);
-    return documentRepository.save(documentEntity).getId();
+    return documentRepository.save(documentEntity);
   }
 
   private DocumentEntity mapDocumentEntity(Document document) {

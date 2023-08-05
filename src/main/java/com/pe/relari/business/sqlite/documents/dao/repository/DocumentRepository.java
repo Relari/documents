@@ -1,10 +1,30 @@
 package com.pe.relari.business.sqlite.documents.dao.repository;
 
 import com.pe.relari.business.sqlite.documents.model.entity.DocumentEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
-@Repository
-public interface DocumentRepository extends JpaRepository<DocumentEntity, Integer> {
+import java.util.List;
+import java.util.Optional;
+
+@Mapper
+public interface DocumentRepository {
+
+    @Select("SELECT * FROM Document")
+    List<DocumentEntity> findAll();
+
+    @Select("SELECT * FROM Document WHERE ID = #{id}")
+    Optional<DocumentEntity> findById(int id);
+
+    @Insert("INSERT INTO Document (DESCRIPTION, AUTHOR, GENDER, NUMBER_PAGES, YEAR_PUBLICATION) VALUES (#{description}, #{author}, #{gender}, #{numberPages}, #{yearPublication})")
+    int save(DocumentEntity document);
+
+    @Delete("DELETE FROM Document WHERE ID = #{id}")
+    void deleteById(int id);
+
+//    @Update("UPDATE Document SET DESCRIPCION = #{descripcion} WHERE ID = #{ID}")
+//    void update(DocumentEntity document);
 
 }
