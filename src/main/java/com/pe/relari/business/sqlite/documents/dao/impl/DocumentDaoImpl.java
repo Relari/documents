@@ -4,7 +4,6 @@ import com.pe.relari.business.sqlite.documents.dao.DocumentDao;
 import com.pe.relari.business.sqlite.documents.dao.repository.DocumentRepository;
 import com.pe.relari.business.sqlite.documents.exception.DocumentException;
 import com.pe.relari.business.sqlite.documents.exception.ErrorCategory;
-import com.pe.relari.business.sqlite.documents.exception.ErrorFactory;
 import com.pe.relari.business.sqlite.documents.model.domain.Document;
 import com.pe.relari.business.sqlite.documents.model.entity.DocumentEntity;
 import java.util.List;
@@ -50,11 +49,11 @@ class DocumentDaoImpl implements DocumentDao {
   @Override
   public Document findById(Integer id) {
     log.debug("Buscando el documento por el id {}", id);
-    return documentRepository.findById(id)
-        .map(this::mapDocument)
-        .orElseThrow(() ->
-                DocumentException.of(ErrorCategory.EMPLOYEE_NOT_FOUND)
-    );
+    DocumentEntity documentEntity = documentRepository.findById(id);
+    if (documentEntity == null) {
+      throw DocumentException.of(ErrorCategory.EMPLOYEE_NOT_FOUND);
+    }
+    return this.mapDocument(documentEntity);
   }
 
   @Override
