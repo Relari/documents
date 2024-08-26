@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.pe.relari</groupId>
-	<artifactId>srv-neg-document-management</artifactId>
+	<artifactId>srv-neg-document-management-v1</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>srv-neg-document-management</name>
+	<name>srv-neg-document-management-v1</name>
 	<description>Documents project for Spring Boot</description>
 
 	<properties>
