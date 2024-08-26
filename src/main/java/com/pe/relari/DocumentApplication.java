@@ -1,4 +1,4 @@
-package com.pe.relari.business.sqlite;
+package com.pe.relari;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

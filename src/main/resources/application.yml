@@ -5,7 +5,7 @@ application:
     version: '@project.version@'
 
   api:
-    path: '/business/sqlite/v1/documents'
+    path: '/api/v1/document-management'
   backend:
     errors:
       EMPLOYEE_NOT_SAVE:
@@ -21,7 +21,7 @@ application:
 logging:
   file: document.log
   level:
-    com.pe.relari.business.sqlite: TRACE
+    com.pe.relari: TRACE
 
 server:
   port: 8106

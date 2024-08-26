@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.pe.relari.business.sqlite</groupId>
-	<artifactId>documents</artifactId>
+	<artifactId>api-document-mangement</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
-	<name>Business Sqlite Documents</name>
+	<name>api-document-mangement</name>
 	<description>Documents project for Spring Boot</description>
 
 	<properties>
